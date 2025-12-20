@@ -133,15 +133,15 @@ export default function HomePage() {
         <HeroCarousel />
 
         {/* Video Background Section */}
-        <section className="relative min-h-[80vh] md:min-h-[90vh] overflow-hidden mt-4 md:mt-6">
+        <section className="relative aspect-[9/14] md:aspect-auto md:min-h-[90vh] overflow-hidden mt-4 md:mt-6">
           {/* Video Background */}
-          <div className="absolute inset-0 z-0 bg-black">
+          <div className="absolute inset-0 z-0">
             <video
               autoPlay
               muted
               loop
               playsInline
-              className="w-full h-full object-contain md:object-cover"
+              className="w-full h-full object-cover"
               poster="/luxurious-silk-sarees-display-traditional-indian.jpg"
             >
               <source src="/sareesansarvideo.mp4" type="video/mp4" />
@@ -152,7 +152,7 @@ export default function HomePage() {
           </div>
 
           {/* Content Over Video */}
-          <div className="relative z-10 h-full container mx-auto px-4 flex items-center">
+          <div className="relative z-10 h-full container mx-auto px-4 flex items-center py-8">
             <div className="max-w-2xl text-white">
               <p className="text-primary font-medium mb-2 tracking-wider uppercase text-sm md:text-base animate-pulse">
                 ✨ Experience the Elegance
