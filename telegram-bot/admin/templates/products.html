@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Products</h1>
+    <p class="text-gray-500">View all products in inventory</p>
+</div>
+
+<!-- Products Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for product in products %}
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden card-hover transition">
+        <div class="aspect-square bg-gray-100 relative">
+            <div class="absolute top-3 right-3">
+                {% if product.stock <= 5 %} <span class="px-2 py-1 text-xs font-medium rounded-full 
+                    {% if product.stock == 0 %}bg-red-100 text-red-700
+                    {% else %}bg-yellow-100 text-yellow-700{% endif %}">
+                    {% if product.stock == 0 %}Out of Stock{% else %}Low Stock: {{ product.stock }}{% endif %}
+                    </span>
+                    {% else %}
+                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700">
+                        In Stock: {{ product.stock }}
+                    </span>
+                    {% endif %}
+            </div>
+        </div>
+        <div class="p-4">
+            <h3 class="font-medium text-gray-800 line-clamp-2 mb-2">{{ product.name }}</h3>
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-lg font-bold text-gray-800">₹{{ "{:,}".format(product.price) }}</span>
+                {% if product.original_price %}
+                <span class="text-sm text-gray-400 line-through">₹{{ "{:,}".format(product.original_price) }}</span>
+                <span class="text-xs text-green-600 font-medium">{{ product.get_discount_percent() }}% OFF</span>
+                {% endif %}
+            </div>
+            <div class="flex items-center justify-between text-sm text-gray-500">
+                <span>{{ product.category.title() }}</span>
+                <span>⭐ {{ product.rating }}/5</span>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

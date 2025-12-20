@@ -20,6 +20,9 @@ interface ProductCardProps {
   stock?: number
   rating?: number
   reviewCount?: number
+  isNew?: boolean
+  isBestseller?: boolean
+  colorVariants?: string[]
 }
 
 export function ProductCard({
@@ -33,6 +36,9 @@ export function ProductCard({
   stock = 10,
   rating = 0,
   reviewCount = 0,
+  isNew = false,
+  isBestseller = false,
+  colorVariants = [],
 }: ProductCardProps) {
   const [currentImage, setCurrentImage] = useState(0)
   const [isWishlisted, setIsWishlisted] = useState(false)
@@ -52,12 +58,24 @@ export function ProductCard({
             className="object-cover transition-transform duration-500 group-hover:scale-110"
           />
 
-          {/* Discount Badge */}
-          {discount > 0 && (
-            <div className="absolute top-3 left-3 bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-semibold z-10">
-              {discount}% OFF
-            </div>
-          )}
+          {/* Top Left Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+            {isNew && (
+              <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                ✨ NEW
+              </div>
+            )}
+            {isBestseller && (
+              <div className="bg-secondary text-secondary-foreground px-2 py-1 rounded-full text-xs font-semibold">
+                🔥 Bestseller
+              </div>
+            )}
+            {discount > 0 && (
+              <div className="bg-accent text-accent-foreground px-2 py-1 rounded-full text-xs font-semibold">
+                {discount}% OFF
+              </div>
+            )}
+          </div>
 
           {/* Stock Status Badge */}
           {stock <= 5 && stock > 0 && (
@@ -130,6 +148,26 @@ export function ProductCard({
               <p className="text-sm text-muted-foreground line-through">₹{originalPrice.toLocaleString("en-IN")}</p>
             )}
           </div>
+
+          {/* Color Variants */}
+          {colorVariants.length > 0 && (
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-xs text-muted-foreground">Colors:</span>
+              <div className="flex gap-1">
+                {colorVariants.slice(0, 5).map((color, index) => (
+                  <div
+                    key={index}
+                    className="w-4 h-4 rounded-full border border-border shadow-sm"
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+                {colorVariants.length > 5 && (
+                  <span className="text-xs text-muted-foreground">+{colorVariants.length - 5}</span>
+                )}
+              </div>
+            </div>
+          )}
         </Link>
       </CardContent>
 

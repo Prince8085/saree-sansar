@@ -3,6 +3,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { HeroCarousel } from "@/components/hero-carousel"
+import { PromoVideo } from "@/components/promo-video"
 import { CategoryCard } from "@/components/category-card"
 import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
@@ -80,22 +81,47 @@ const testimonials = [
   {
     name: "Priya Sharma",
     location: "Raipur",
+    initials: "PS",
     rating: 5,
     text: "Found my perfect wedding saree at Saree Sansar! The quality and craftsmanship are exceptional. Sanjay ji helped me choose the best design.",
   },
   {
     name: "Anjali Verma",
     location: "Bilaspur",
+    initials: "AV",
     rating: 5,
     text: "The Kosa silk collection is absolutely stunning. Authentic local work and reasonable prices. Highly recommended!",
   },
   {
     name: "Kavita Patel",
     location: "Korba",
+    initials: "KP",
     rating: 5,
     text: "Excellent service and beautiful collection. The team is very helpful and patient. Got a gorgeous saree for my sister's wedding.",
   },
+  {
+    name: "Sneha Gupta",
+    location: "Raigarh",
+    initials: "SG",
+    rating: 5,
+    text: "Virtual try-on feature is amazing! Could see how the saree would look before buying. Delivery was super fast too.",
+  },
+  {
+    name: "Meera Joshi",
+    location: "Durg",
+    initials: "MJ",
+    rating: 5,
+    text: "Best bridal collection in Chhattisgarh! The Banarasi sarees are to die for. Will definitely shop here again.",
+  },
+  {
+    name: "Ritu Singh",
+    location: "Ambikapur",
+    initials: "RS",
+    rating: 5,
+    text: "Ordered a Kosa silk saree for my mother. The quality exceeded expectations. Packaging was premium too!",
+  },
 ]
+
 
 export default function HomePage() {
   return (
@@ -105,6 +131,83 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <HeroCarousel />
+
+        {/* Video Background Section */}
+        <section className="relative min-h-[80vh] md:min-h-[90vh] overflow-hidden mt-4 md:mt-6">
+          {/* Video Background */}
+          <div className="absolute inset-0 z-0 bg-black">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-contain md:object-cover"
+              poster="/luxurious-silk-sarees-display-traditional-indian.jpg"
+            >
+              <source src="/sareesansarvideo.mp4" type="video/mp4" />
+            </video>
+            {/* Overlay Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+          </div>
+
+          {/* Content Over Video */}
+          <div className="relative z-10 h-full container mx-auto px-4 flex items-center">
+            <div className="max-w-2xl text-white">
+              <p className="text-primary font-medium mb-2 tracking-wider uppercase text-sm md:text-base animate-pulse">
+                ✨ Experience the Elegance
+              </p>
+              <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                Drape Yourself in
+                <span className="block text-primary">Timeless Beauty</span>
+              </h2>
+              <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
+                From traditional Kosa Silk to exquisite Banarasi weaves, discover handcrafted sarees
+                that tell a story of Indian heritage and artistry.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link href="/products">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 font-semibold px-8">
+                    <Sparkles className="h-5 w-5" />
+                    Explore Collection
+                  </Button>
+                </Link>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white hover:text-black gap-2 font-semibold px-8 bg-transparent"
+                  onClick={() => window.open("https://wa.me/919354815144", "_blank")}
+                >
+                  <Heart className="h-5 w-5" />
+                  Get Styling Tips
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="flex gap-8 mt-10 pt-8 border-t border-white/20">
+                <div>
+                  <p className="text-3xl md:text-4xl font-bold text-primary">24+</p>
+                  <p className="text-white/70 text-sm">Years of Trust</p>
+                </div>
+                <div>
+                  <p className="text-3xl md:text-4xl font-bold text-primary">50K+</p>
+                  <p className="text-white/70 text-sm">Happy Customers</p>
+                </div>
+                <div>
+                  <p className="text-3xl md:text-4xl font-bold text-primary">1000+</p>
+                  <p className="text-white/70 text-sm">Saree Designs</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+            <div className="w-8 h-12 rounded-full border-2 border-white/50 flex items-start justify-center p-2">
+              <div className="w-1 h-3 bg-white/70 rounded-full animate-pulse" />
+            </div>
+          </div>
+        </section>
 
         {/* Features Bar */}
         <section className="border-y border-border bg-primary/10">
@@ -150,23 +253,8 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Promotional Banner Section */}
-        <section className="bg-gradient-to-r from-secondary via-accent to-secondary text-white py-12">
-          <div className="container mx-auto px-4">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Sparkles className="h-8 w-8 animate-pulse" />
-                <h2 className="font-serif text-3xl md:text-4xl font-bold">Special Festive Offer</h2>
-                <Sparkles className="h-8 w-8 animate-pulse" />
-              </div>
-              <p className="text-xl md:text-2xl mb-6">Get Flat 20% OFF on Bridal Collection</p>
-              <p className="text-lg mb-6 opacity-90">Limited Time Only - Shop Now & Save Big!</p>
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8">
-                Shop Bridal Collection
-              </Button>
-            </div>
-          </div>
-        </section>
+        {/* Promotional Video Section */}
+        <PromoVideo />
 
         {/* Virtual Try-On Feature Section */}
         <section className="py-16 bg-gradient-to-r from-primary via-secondary to-accent text-white relative overflow-hidden">
@@ -210,11 +298,11 @@ export default function HomePage() {
                 </Link>
               </div>
               <div className="relative">
-                <div className="aspect-[4/5] rounded-lg overflow-hidden shadow-2xl border-4 border-white/20">
+                <div className="rounded-lg overflow-hidden shadow-2xl border-4 border-white/20">
                   <img
-                    src="/virtual-try-on-demo-preview.jpg?height=600&width=480&query=woman trying saree virtual fitting room technology"
+                    src="/trybeforeyoubuy.png"
                     alt="Virtual Try-On Demo"
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
                 <div className="absolute -bottom-4 -right-4 bg-white text-primary p-4 rounded-lg shadow-xl">
@@ -258,11 +346,11 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card className="overflow-hidden group cursor-pointer border-2 hover:border-primary transition-all duration-300">
-                <div className="relative h-64 overflow-hidden">
+                <div className="relative overflow-hidden">
                   <img
-                    src="/kosa-silk-special-collection.jpg?height=400&width=400&query=traditional kosa silk saree collection"
+                    src="/kosasilk.png"
                     alt="Kosa Silk Special"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-4 right-4 bg-secondary text-white px-3 py-1 rounded-full text-sm font-semibold">
                     Local Craft
@@ -283,11 +371,11 @@ export default function HomePage() {
               </Card>
 
               <Card className="overflow-hidden group cursor-pointer border-2 hover:border-secondary transition-all duration-300">
-                <div className="relative h-64 overflow-hidden">
+                <div className="relative overflow-hidden">
                   <img
-                    src="/perfect-bridal-collection.jpg?height=400&width=400&query=luxurious indian bridal wedding collection"
+                    src="/perfectbridalcollection.png"
                     alt="Perfect Bridal Collection"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-4 right-4 bg-accent text-white px-3 py-1 rounded-full text-sm font-semibold">
                     Trending
@@ -308,11 +396,11 @@ export default function HomePage() {
               </Card>
 
               <Card className="overflow-hidden group cursor-pointer border-2 hover:border-accent transition-all duration-300">
-                <div className="relative h-64 overflow-hidden">
+                <div className="relative overflow-hidden">
                   <img
-                    src="/festive-collection.jpg?height=400&width=400&query=colorful festive ethnic wear collection"
+                    src="/festivecollection.png"
                     alt="Festive Collection"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-auto object-contain group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-4 right-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
                     <BadgePercent className="h-3 w-3" />
@@ -423,54 +511,73 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
                   className="bg-card p-6 rounded-lg border border-border hover:shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-1"
                 >
-                  <div className="flex gap-1 mb-4">
+                  {/* Customer Avatar & Info */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-lg">
+                      {testimonial.initials}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-foreground">{testimonial.name}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.location}</p>
+                    </div>
+                  </div>
+
+                  {/* Rating */}
+                  <div className="flex gap-1 mb-3">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                      <Star key={i} className="h-4 w-4 fill-primary text-primary" />
                     ))}
                   </div>
-                  <p className="text-foreground mb-4 leading-relaxed">"{testimonial.text}"</p>
-                  <div className="border-t border-border pt-4">
-                    <p className="font-semibold text-foreground">{testimonial.name}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.location}</p>
-                  </div>
+
+                  {/* Review Text */}
+                  <p className="text-foreground leading-relaxed text-sm">"{testimonial.text}"</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-secondary text-secondary-foreground relative overflow-hidden">
-          <div className="absolute inset-0 mandala-pattern opacity-10" />
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4 text-balance">
-              Need Help Choosing the Perfect Saree?
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto text-balance text-secondary-foreground/90">
-              Our expert team is here to help you find the perfect outfit. Chat with us on WhatsApp for personalized
-              recommendations.
-            </p>
-            <Button
-              size="lg"
-              className="bg-[#25D366] hover:bg-[#20BA5A] text-white gap-2 text-lg px-8 py-6 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg"
-              onClick={() => window.open("https://wa.me/919354815144", "_blank")}
-            >
-              <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Chat with Us on WhatsApp
-            </Button>
-          </div>
-        </section>
-      </main>
+        {/* CTA + Footer Wrapper with Single Background */}
+        <div
+          className="relative"
+          style={{ backgroundImage: 'url(/footerbackground.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
+          {/* Dark Overlay for the entire section */}
+          <div className="absolute inset-0 bg-black/50" />
 
-      <Footer />
+          {/* CTA Section */}
+          <section className="py-16 text-white relative z-10">
+            <div className="container mx-auto px-4 text-center">
+              <h2 className="font-serif text-3xl md:text-4xl font-bold mb-4 text-balance">
+                Need Help Choosing the Perfect Saree?
+              </h2>
+              <p className="text-lg mb-8 max-w-2xl mx-auto text-balance text-white/90">
+                Our expert team is here to help you find the perfect outfit. Chat with us on WhatsApp for personalized
+                recommendations.
+              </p>
+              <Button
+                size="lg"
+                className="bg-[#25D366] hover:bg-[#20BA5A] text-white gap-2 text-lg px-8 py-6 transition-all duration-300 ease-in-out hover:-translate-y-1 hover:shadow-lg"
+                onClick={() => window.open("https://wa.me/919354815144", "_blank")}
+              >
+                <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                Chat with Us on WhatsApp
+              </Button>
+            </div>
+          </section>
+
+          {/* Footer inside the wrapper for seamless background */}
+          <Footer />
+        </div>
+      </main>
     </div>
   )
 }

@@ -212,23 +212,81 @@ export default function VirtualTryOnPage() {
 
       <main className="flex-1 py-8 bg-gradient-to-b from-background to-primary/5">
         <div className="container mx-auto px-4">
-          {/* Hero Section */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Sparkles className="h-8 w-8 text-primary" />
-              <h1 className="font-serif text-4xl md:text-5xl font-bold text-balance">Virtual Try-On</h1>
-              <Sparkles className="h-8 w-8 text-primary" />
+          {/* Hero Section with Promo Video */}
+          <div className="mb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Video/Image Side */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-primary/20">
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster="/virtual-tryon-promo.jpg"
+                  className="w-full h-auto"
+                >
+                  <source src="/virtualtryonvideo.mp4" type="video/mp4" />
+                  {/* Fallback to image if video doesn't load */}
+                  <img src="/virtual-tryon-promo.jpg" alt="Virtual Try-On" className="w-full h-auto" />
+                </video>
+              </div>
+
+              {/* Text Content Side */}
+              <div className="text-center lg:text-left">
+                <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
+                  <Sparkles className="h-8 w-8 text-primary animate-pulse" />
+                  <span className="bg-accent text-accent-foreground text-sm px-3 py-1 rounded-full font-semibold">
+                    AI-POWERED
+                  </span>
+                </div>
+                <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-balance mb-4">
+                  Try Before <span className="text-primary">You Buy</span>
+                </h1>
+                <p className="text-lg text-muted-foreground mb-6 text-balance">
+                  Upload your photo and see how you look in our stunning sarees with our AI-powered Virtual Try-On.
+                  Instant virtual draping, try multiple designs in seconds!
+                </p>
+                <ul className="space-y-3 mb-6">
+                  <li className="flex items-center gap-3 justify-center lg:justify-start">
+                    <div className="bg-primary/20 p-2 rounded-full">
+                      <Camera className="h-5 w-5 text-primary" />
+                    </div>
+                    <span>Instant virtual draping</span>
+                  </li>
+                  <li className="flex items-center gap-3 justify-center lg:justify-start">
+                    <div className="bg-primary/20 p-2 rounded-full">
+                      <Sparkles className="h-5 w-5 text-primary" />
+                    </div>
+                    <span>Try multiple designs in seconds</span>
+                  </li>
+                  <li className="flex items-center gap-3 justify-center lg:justify-start">
+                    <div className="bg-primary/20 p-2 rounded-full">
+                      <Share2 className="h-5 w-5 text-primary" />
+                    </div>
+                    <span>Share with family for opinions</span>
+                  </li>
+                </ul>
+                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 gap-2 text-lg px-8"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="h-5 w-5" />
+                    Start Try-On Now
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-2 text-lg bg-transparent"
+                    onClick={() => window.open("https://wa.me/919354815144", "_blank")}
+                  >
+                    <MessageCircle className="h-5 w-5" />
+                    Need Help?
+                  </Button>
+                </div>
+              </div>
             </div>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-balance">
-              Visualize our beautiful sarees with AI! Select a saree to see a stunning preview of how it looks when draped traditionally.
-            </p>
-            <div className="mt-4 inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
-              <Sparkles className="h-4 w-4" />
-              AI-Powered Fashion Preview
-            </div>
-            <p className="text-xs text-muted-foreground mt-2 max-w-xl mx-auto">
-              ✨ This generates a beautiful AI preview showing the saree style. For exact product appearance, contact us on WhatsApp!
-            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">

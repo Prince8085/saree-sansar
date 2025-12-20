@@ -33,17 +33,17 @@ export function Header() {
   }, [])
 
   const sareeCategories = [
-    { name: "Silk Sarees", href: "/products?category=silk" },
-    { name: "Kosa Silk (Special)", href: "/products?category=kosa" },
-    { name: "Cotton Sarees", href: "/products?category=cotton" },
-    { name: "Bridal Sarees", href: "/products?category=bridal" },
+    { name: "Silk Sarees", href: "/products?category=silk", image: "/golden-banarasi-silk-saree.jpg", desc: "Premium Banarasi & Tussar" },
+    { name: "Kosa Silk (Special)", href: "/products?category=kosa", image: "/emerald-green-kosa-silk-saree.jpg", desc: "Authentic CG Heritage" },
+    { name: "Cotton Sarees", href: "/products?category=cotton", image: "/blue-cotton-silk-saree-pattern.jpg", desc: "Daily & Casual Wear" },
+    { name: "Bridal Collection", href: "/products?category=bridal", image: "/royal-maroon-bridal-silk-saree.jpg", desc: "Wedding Specials" },
   ]
 
   const ethnicWear = [
-    { name: "Kurtis", href: "/products?category=kurtis" },
-    { name: "Salwar Suits", href: "/products?category=suits" },
-    { name: "Indo-Western", href: "/products?category=indo-western" },
-    { name: "Ghagra Chunni", href: "/products?category=ghagra" },
+    { name: "Kurtis", href: "/products?category=kurtis", image: "/modern-indian-kurti-ethnic-wear.jpg", desc: "Trendy & Comfortable" },
+    { name: "Salwar Suits", href: "/products?category=suits", image: "/modern-indian-kurti-ethnic-wear.jpg", desc: "Elegant Sets" },
+    { name: "Indo-Western", href: "/products?category=indo-western", image: "/modern-indian-kurti-ethnic-wear.jpg", desc: "Fusion Fashion" },
+    { name: "Ghagra Chunni", href: "/products?category=ghagra", image: "/colorful-indian-ghagra-choli-lehenga.jpg", desc: "Traditional Charm" },
   ]
 
   const handleSearch = (e: React.FormEvent) => {
@@ -65,6 +65,15 @@ export function Header() {
 
   return (
     <>
+      {/* Floating Announcement Bar */}
+      <div className="bg-gradient-to-r from-accent via-primary to-secondary text-white py-2 overflow-hidden">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {["🎉 Free Shipping above ₹10,000", "💫 New Arrivals Weekly", "🎁 Festival Sale Live - Up to 30% OFF", "✨ Authentic Kosa Silk Collection", "🚚 Pan India Delivery", "💝 Special Bridal Discount", "🎉 Free Shipping above ₹10,000", "💫 New Arrivals Weekly", "🎁 Festival Sale Live - Up to 30% OFF", "✨ Authentic Kosa Silk Collection", "🚚 Pan India Delivery", "💝 Special Bridal Discount"].map((text, i) => (
+            <span key={i} className="mx-6 text-sm font-medium">{text} <span className="mx-4 text-white/50">|</span></span>
+          ))}
+        </div>
+      </div>
+
       <div className="bg-gradient-to-r from-primary via-primary to-secondary text-primary-foreground py-2 px-4">
         <div className="container mx-auto flex justify-between items-center text-sm">
           <div className="flex items-center gap-6">
@@ -92,8 +101,12 @@ export function Header() {
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center transition-transform group-hover:scale-110 shadow-md">
-                <span className="text-primary-foreground font-serif text-2xl font-bold">S</span>
+              <div className="w-12 h-12 rounded-full overflow-hidden transition-transform group-hover:scale-110 shadow-md">
+                <img
+                  src="/logo.png"
+                  alt="Saree Sansar Logo"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="font-serif text-2xl font-bold text-foreground tracking-tight">Saree Sansar</span>
@@ -125,36 +138,54 @@ export function Header() {
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="text-sm text-foreground">Sarees</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-1 p-3 bg-card border border-border shadow-lg rounded-lg">
+                    <div className="grid grid-cols-2 gap-3 p-4 w-[450px] bg-card border border-border shadow-xl rounded-lg">
                       {sareeCategories.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            href={item.href}
-                            className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors bg-card text-foreground hover:bg-primary/10 hover:text-primary"
-                          >
-                            <div className="text-sm font-medium">{item.name}</div>
-                          </Link>
-                        </li>
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all"
+                        >
+                          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-border">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-sm text-foreground group-hover:text-primary">{item.name}</p>
+                            <p className="text-xs text-muted-foreground">{item.desc}</p>
+                          </div>
+                        </Link>
                       ))}
-                    </ul>
+                    </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="text-sm text-foreground">Ethnic Wear</NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <ul className="grid w-[300px] gap-1 p-3 bg-card border border-border shadow-lg rounded-lg">
+                    <div className="grid grid-cols-2 gap-3 p-4 w-[450px] bg-card border border-border shadow-xl rounded-lg">
                       {ethnicWear.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            href={item.href}
-                            className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors bg-card text-foreground hover:bg-primary/10 hover:text-primary"
-                          >
-                            <div className="text-sm font-medium">{item.name}</div>
-                          </Link>
-                        </li>
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="group flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-all"
+                        >
+                          <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-border">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-sm text-foreground group-hover:text-primary">{item.name}</p>
+                            <p className="text-xs text-muted-foreground">{item.desc}</p>
+                          </div>
+                        </Link>
                       ))}
-                    </ul>
+                    </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 

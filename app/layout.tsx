@@ -11,25 +11,45 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif"
 export const metadata: Metadata = {
   title: "Saree Sansar - The Women's World | Premium Indian Ethnic Wear in Bilaspur",
   description:
-    "Discover exquisite bridal sarees, silk sarees, and ethnic wear at Saree Sansar in Bilaspur. Specializing in wedding collections, Kosa silk, and traditional Indian attire since 2000.",
-  keywords: "saree, bridal saree, silk saree, ethnic wear, Bilaspur, wedding saree, Kosa silk, Indian wear",
-  generator: "v0.app",
+    "Discover exquisite bridal sarees, silk sarees, and ethnic wear at Saree Sansar in Bilaspur. Specializing in wedding collections, Kosa silk, and traditional Indian attire since 2000. Pan India Delivery | Virtual Try-On Available.",
+  keywords: "saree, bridal saree, silk saree, ethnic wear, Bilaspur, wedding saree, Kosa silk, Indian wear, Saree Sansar, Chhattisgarh",
+  authors: [{ name: "Saree Sansar" }],
+  creator: "Saree Sansar",
+  publisher: "Saree Sansar",
+  openGraph: {
+    title: "Saree Sansar - The Women's World",
+    description: "Premium Indian Ethnic Wear since 2000. Bridal Sarees, Kosa Silk, Designer Collections. Pan India Delivery.",
+    url: "https://sareesansar.com",
+    siteName: "Saree Sansar",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 600,
+        alt: "Saree Sansar Logo",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Saree Sansar - The Women's World",
+    description: "Premium Indian Ethnic Wear since 2000. Bridal Sarees, Kosa Silk, Designer Collections.",
+    images: ["/logo.png"],
+  },
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
+        url: "/logo.png",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/icon-dark-32x32.png",
+        url: "/logo.png",
         media: "(prefers-color-scheme: dark)",
       },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
     ],
-    apple: "/apple-icon.png",
+    apple: "/logo.png",
   },
 }
 

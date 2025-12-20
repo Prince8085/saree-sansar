@@ -5,16 +5,16 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-secondary text-secondary-foreground relative overflow-hidden">
-      {/* Decorative Pattern Overlay */}
-      <div className="absolute inset-0 mandala-pattern opacity-10" />
+    <footer className="text-white relative">
+      {/* No background - will inherit from parent wrapper on homepage */}
+      {/* On other pages, add wrapper with background */}
 
       <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* About Section */}
           <div>
             <h3 className="font-serif text-xl font-bold mb-4">Saree Sansar</h3>
-            <p className="text-sm text-secondary-foreground/80 leading-relaxed mb-4">
+            <p className="text-sm text-white/80 leading-relaxed mb-4">
               Since 2000, we've been Bilaspur's trusted destination for premium Indian ethnic wear. Specializing in
               bridal collections, exquisite silk sarees, and traditional attire.
             </p>

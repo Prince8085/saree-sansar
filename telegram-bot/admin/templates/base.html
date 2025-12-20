@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel{% endblock %} - {{ store_name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    {% if session.logged_in %}
+    <!-- Sidebar -->
+    <div class="flex">
+        <aside class="w-64 min-h-screen gradient-bg text-white p-6 fixed">
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold">🛍️ {{ store_name }}</h1>
+                <p class="text-sm opacity-75">Admin Panel</p>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="{{ url_for('dashboard') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20 transition {% if request.endpoint == 'dashboard' %}bg-white/20{% endif %}">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </a>
+                <a href="{{ url_for('orders') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20 transition {% if request.endpoint == 'orders' %}bg-white/20{% endif %}">
+                    <i class="fas fa-box"></i>
+                    Orders
+                </a>
+                <a href="{{ url_for('products') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20 transition {% if request.endpoint == 'products' %}bg-white/20{% endif %}">
+                    <i class="fas fa-tshirt"></i>
+                    Products
+                </a>
+                <a href="{{ url_for('broadcast') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20 transition {% if request.endpoint == 'broadcast' %}bg-white/20{% endif %}">
+                    <i class="fas fa-bullhorn"></i>
+                    Broadcast
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-6 left-6 right-6">
+                <a href="{{ url_for('logout') }}" 
+                   class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/20 transition">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="ml-64 flex-1 p-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+    <main class="min-h-screen flex items-center justify-center">
+        {% block auth_content %}{% endblock %}
+    </main>
+    {% endif %}
+    
+    <script>
+        // Auto-refresh dashboard stats every 30 seconds
+        if (window.location.pathname === '/') {
+            setInterval(() => {
+                fetch('/api/stats')
+                    .then(res => res.json())
+                    .then(data => {
+                        // Update stats if elements exist
+                    });
+            }, 30000);
+        }
+    </script>
+</body>
+</html>
