@@ -307,7 +307,7 @@ function ProductListingContent() {
             </div>
           )}
 
-          <div className="flex gap-8">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
             {/* Desktop Sidebar Filters */}
             <aside className="hidden lg:block w-64 flex-shrink-0">
               <div className="sticky top-24">
@@ -316,7 +316,7 @@ function ProductListingContent() {
             </aside>
 
             {/* Mobile Filter Button */}
-            <div className="lg:hidden fixed bottom-4 right-4 z-40">
+            <div className="lg:hidden fixed bottom-20 right-4 z-40">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button size="lg" className="rounded-full shadow-lg gap-2">
@@ -354,7 +354,7 @@ function ProductListingContent() {
                   </Button>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
                   {filteredProducts.map((product) => (
                     <ProductCard key={product.id} {...product} />
                   ))}

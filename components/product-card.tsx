@@ -59,9 +59,9 @@ export function ProductCard({
           />
 
           {/* Top Left Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+          <div className="absolute top-2 left-2 sm:top-3 sm:left-3 flex flex-col gap-1 sm:gap-1.5 z-10">
             {isNew && (
-              <div className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+              <div className="bg-green-500 text-white px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold">
                 ✨ NEW
               </div>
             )}
@@ -116,9 +116,9 @@ export function ProductCard({
         </div>
       </Link>
 
-      <CardContent className="p-4">
+      <CardContent className="p-2 sm:p-4">
         <Link href={`/products/${slug}`}>
-          <h3 className="font-semibold text-foreground mb-1 line-clamp-2 hover:text-primary transition-colors">
+          <h3 className="font-semibold text-foreground mb-1 line-clamp-2 hover:text-primary transition-colors text-xs sm:text-sm md:text-base">
             {name}
           </h3>
           <p className="text-sm text-muted-foreground mb-2">{fabric}</p>
@@ -142,10 +142,10 @@ export function ProductCard({
           )}
 
           {/* Price */}
-          <div className="flex items-baseline gap-2">
-            <p className="text-xl font-bold text-foreground">₹{price.toLocaleString("en-IN")}</p>
+          <div className="flex items-baseline gap-1 sm:gap-2 flex-wrap">
+            <p className="text-sm sm:text-lg md:text-xl font-bold text-foreground">₹{price.toLocaleString("en-IN")}</p>
             {originalPrice && originalPrice > price && (
-              <p className="text-sm text-muted-foreground line-through">₹{originalPrice.toLocaleString("en-IN")}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground line-through">₹{originalPrice.toLocaleString("en-IN")}</p>
             )}
           </div>
 
