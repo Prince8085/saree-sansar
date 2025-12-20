@@ -315,8 +315,8 @@ function ProductListingContent() {
               </div>
             </aside>
 
-            {/* Mobile Filter Button */}
-            <div className="lg:hidden fixed bottom-20 right-4 z-40">
+            {/* Mobile Filter Button - on left to avoid WhatsApp overlap */}
+            <div className="lg:hidden fixed bottom-24 left-4 z-40">
               <Sheet>
                 <SheetTrigger asChild>
                   <Button size="lg" className="rounded-full shadow-lg gap-2">

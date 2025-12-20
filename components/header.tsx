@@ -294,91 +294,136 @@ export function Header() {
                     </Button>
                   </form>
 
-                  <nav className="flex flex-col gap-4">
+                  <nav className="flex flex-col gap-1">
+                    {/* Home */}
                     <Link
                       href="/"
-                      className="text-lg font-medium hover:text-primary transition-colors"
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors font-medium"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Home
-                    </Link>
-                    <Link
-                      href="/products?collection=bridal"
-                      className="text-lg font-medium text-secondary hover:text-secondary/80 transition-colors"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Bridal Collection
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                      </div>
+                      <span>Home</span>
                     </Link>
 
-                    <div className="space-y-2">
-                      <div className="text-lg font-semibold text-foreground">Sarees</div>
-                      <div className="pl-4 space-y-2">
+                    {/* Bridal Collection - Highlighted */}
+                    <Link
+                      href="/products?collection=bridal"
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg bg-gradient-to-r from-secondary/20 to-secondary/10 border border-secondary/30 hover:from-secondary/30 transition-all font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+                        <span className="text-lg">💍</span>
+                      </div>
+                      <div>
+                        <span className="text-secondary font-semibold">Bridal Collection</span>
+                        <p className="text-xs text-muted-foreground">Wedding Specials</p>
+                      </div>
+                    </Link>
+
+                    {/* Divider */}
+                    <div className="h-px bg-border my-2" />
+
+                    {/* Sarees Section */}
+                    <div className="px-3 py-2">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Sarees</p>
+                      <div className="grid grid-cols-2 gap-2">
                         {sareeCategories.map((item) => (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className="block text-muted-foreground hover:text-primary transition-colors"
+                            className="flex items-center gap-2 p-2 rounded-lg hover:bg-primary/10 transition-colors"
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            {item.name}
+                            <img src={item.image} alt={item.name} className="w-8 h-8 rounded object-cover" />
+                            <span className="text-sm">{item.name}</span>
                           </Link>
                         ))}
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="text-lg font-semibold text-foreground">Ethnic Wear</div>
-                      <div className="pl-4 space-y-2">
+                    {/* Divider */}
+                    <div className="h-px bg-border my-2" />
+
+                    {/* Ethnic Wear Section */}
+                    <div className="px-3 py-2">
+                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Ethnic Wear</p>
+                      <div className="grid grid-cols-2 gap-2">
                         {ethnicWear.map((item) => (
                           <Link
                             key={item.name}
                             href={item.href}
-                            className="block text-muted-foreground hover:text-primary transition-colors"
+                            className="flex items-center gap-2 p-2 rounded-lg hover:bg-primary/10 transition-colors"
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            {item.name}
+                            <img src={item.image} alt={item.name} className="w-8 h-8 rounded object-cover" />
+                            <span className="text-sm">{item.name}</span>
                           </Link>
                         ))}
                       </div>
                     </div>
 
+                    {/* Divider */}
+                    <div className="h-px bg-border my-2" />
+
+                    {/* Special Features */}
                     <Link
                       href="/virtual-try-on"
-                      className="text-lg font-medium hover:text-primary transition-colors flex items-center gap-2"
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 hover:from-accent/30 transition-all"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <span className="bg-accent text-accent-foreground text-xs px-1.5 py-0.5 rounded">NEW</span>
-                      Virtual Try-On
+                      <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+                        <span className="text-lg">📸</span>
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold">Virtual Try-On</span>
+                          <span className="bg-accent text-accent-foreground text-[10px] px-1.5 py-0.5 rounded font-bold">NEW</span>
+                        </div>
+                        <p className="text-xs text-muted-foreground">Try before you buy</p>
+                      </div>
                     </Link>
 
                     <Link
                       href="/track-order"
-                      className="text-lg font-medium hover:text-primary transition-colors flex items-center gap-2"
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Package className="h-5 w-5" />
-                      Track Order
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Package className="w-5 h-5 text-primary" />
+                      </div>
+                      <span className="font-medium">Track Order</span>
                     </Link>
 
                     <Link
                       href="/about"
-                      className="text-lg font-medium hover:text-primary transition-colors"
+                      className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-primary/10 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      About Us
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <span className="font-medium">About Us</span>
                     </Link>
 
-                    <div className="border-t border-border pt-4 mt-2">
+                    {/* WhatsApp CTA */}
+                    <div className="mt-4 pt-4 border-t border-border">
                       <Button
-                        className="w-full bg-[#25D366] hover:bg-[#20BA5A] text-white gap-2"
+                        className="w-full bg-[#25D366] hover:bg-[#20BA5A] text-white gap-2 h-12 text-base font-semibold shadow-lg"
                         onClick={() => {
                           handleWhatsAppClick()
                           setMobileMenuOpen(false)
                         }}
                       >
-                        <MessageCircle className="h-4 w-4" />
+                        <MessageCircle className="h-5 w-5" />
                         Chat on WhatsApp
                       </Button>
+                      <p className="text-center text-xs text-muted-foreground mt-2">Quick response guaranteed!</p>
                     </div>
                   </nav>
                 </SheetContent>
