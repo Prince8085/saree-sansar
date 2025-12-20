@@ -5,9 +5,12 @@ export function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="text-white relative">
-      {/* No background - will inherit from parent wrapper on homepage */}
-      {/* On other pages, add wrapper with background */}
+    <footer
+      className="text-white relative overflow-hidden"
+      style={{ backgroundImage: 'url(/footerbackground.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      {/* Dark Overlay for Readability */}
+      <div className="absolute inset-0 bg-black/60" />
 
       <div className="container mx-auto px-4 py-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
