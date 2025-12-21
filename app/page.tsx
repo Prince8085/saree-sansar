@@ -156,16 +156,17 @@ export default function HomePage() {
           <div className="relative z-10 h-full container mx-auto px-4 flex items-center py-8">
             <div className="max-w-2xl text-white">
               <p className="text-primary font-medium mb-2 tracking-wider uppercase text-sm md:text-base animate-pulse">
-                ✨ Experience the Elegance
+                ✨ Bilaspur's Most Loved Saree Destination
               </p>
               <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
-                Drape Yourself in
-                <span className="block text-primary">Timeless Beauty</span>
+                Tradition Meets Style,
+                <span className="block text-primary">Quality Meets Trust</span>
               </h2>
-              <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-                From traditional Kosa Silk to exquisite Banarasi weaves, discover handcrafted sarees
-                that tell a story of Indian heritage and artistry.
-              </p>
+              <div className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed space-y-1">
+                <p className="font-semibold text-white">50,000+ khush customers | 1000+ Designs | 25 Years of Excellence</p>
+                <p>Ab Virtual Try-On ke saath ghar baithe choose karo!</p>
+                <p>Or Ghar Baithe Humare Whatsapp Bot Se bat krke order karo</p>
+              </div>
               <div className="flex flex-wrap gap-4">
                 <Link href="/products">
                   <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 font-semibold px-8">
@@ -180,7 +181,7 @@ export default function HomePage() {
                   onClick={() => window.open("https://wa.me/919354815144", "_blank")}
                 >
                   <Heart className="h-5 w-5" />
-                  Get Styling Tips
+                  Chat on WhatsApp
                 </Button>
               </div>
 
