@@ -4,6 +4,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { HeroCarousel } from "@/components/hero-carousel"
 import { PromoVideo } from "@/components/promo-video"
+import { InstagramVideos } from "@/components/instagram-videos"
 import { CategoryCard } from "@/components/category-card"
 import { ProductCard } from "@/components/product-card"
 import { Button } from "@/components/ui/button"
@@ -500,6 +501,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Instagram Videos Section */}
+        <InstagramVideos />
 
         {/* Testimonials */}
         <section className="py-16 bg-gradient-to-b from-background to-muted mandala-pattern">
