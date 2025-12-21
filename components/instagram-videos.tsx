@@ -83,10 +83,10 @@ function VideoCard({ src, title }: VideoCardProps) {
                 </div>
             )}
 
-            {/* Mute Button */}
+            {/* Mute Button - Bottom right on mobile, top right on desktop */}
             <button
                 onClick={toggleMute}
-                className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/60"
+                className="absolute bottom-14 right-3 md:bottom-auto md:top-3 bg-black/60 backdrop-blur-sm p-2.5 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 hover:bg-black/80 z-10"
             >
                 {isMuted ? (
                     <VolumeX className="h-4 w-4 text-white" />
