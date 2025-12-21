@@ -50,7 +50,7 @@ export function HeroCarousel() {
             currentSlide === index ? "opacity-100" : "opacity-0",
           )}
         >
-          <div className="w-full h-full bg-cover bg-top" style={{ backgroundImage: `url(${slide.image})` }}>
+          <div className="w-full h-full bg-cover" style={{ backgroundImage: `url(${slide.image})`, backgroundPosition: 'center 25%' }}>
             {/* Overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
 
