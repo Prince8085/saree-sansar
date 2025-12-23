@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { AdminLayout } from "@/components/admin/admin-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,78 +13,104 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Search, MoreVertical, Pencil, Trash2, Eye, Filter } from "lucide-react"
+import { Plus, Search, MoreVertical, Pencil, Trash2, Eye, Filter, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-// Mock products data
-const mockProducts = [
-  {
-    id: "1",
-    name: "Royal Maroon Bridal Silk Saree with Heavy Embroidery",
-    sku: "BRS-001",
-    category: "Bridal Sarees",
-    price: 25999,
-    stock: 15,
-    status: "active",
-    image: "/maroon-bridal-silk-saree-gold-embroidery.jpg",
-  },
-  {
-    id: "2",
-    name: "Traditional Kosa Silk Saree in Forest Green",
-    sku: "KSS-002",
-    category: "Kosa Silk",
-    price: 12999,
-    stock: 8,
-    status: "active",
-    image: "/green-kosa-silk-saree-traditional.jpg",
-  },
-  {
-    id: "3",
-    name: "Designer Banarasi Saree with Golden Border",
-    sku: "BNS-003",
-    category: "Banarasi Sarees",
-    price: 18999,
-    stock: 0,
-    status: "out_of_stock",
-    image: "/banarasi-saree-purple-golden-border.jpg",
-  },
-  {
-    id: "4",
-    name: "Elegant Cotton Silk Saree in Royal Blue",
-    sku: "CSS-004",
-    category: "Cotton Sarees",
-    price: 8999,
-    stock: 25,
-    status: "active",
-    image: "/royal-blue-cotton-silk-saree.jpg",
-  },
-  {
-    id: "5",
-    name: "Designer Kurti Set with Palazzo",
-    sku: "KRT-005",
-    category: "Kurtis",
-    price: 3999,
-    stock: 42,
-    status: "active",
-    image: "/designer-kurti-palazzo-set.jpg",
-  },
-]
+interface Product {
+  id: string
+  name: string
+  slug: string
+  category: string
+  price: number
+  stock: number
+  images: string[]
+}
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
-  const [statusFilter, setStatusFilter] = useState("all")
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
-  const filteredProducts = mockProducts.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.sku.toLowerCase().includes(searchQuery.toLowerCase())
+  // Fetch products from API
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch("/api/products")
+        if (response.ok) {
+          const data = await response.json()
+          setProducts(data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProducts()
+  }, [])
+
+  // Handle delete
+  const handleDelete = async () => {
+    if (!deleteId) return
+    setDeleting(true)
+    try {
+      const response = await fetch(`/api/products/${deleteId}`, {
+        method: "DELETE",
+      })
+      if (response.ok) {
+        setProducts((prev) => prev.filter((p) => p.id !== deleteId))
+      }
+    } catch (error) {
+      console.error("Failed to delete product:", error)
+    } finally {
+      setDeleting(false)
+      setDeleteId(null)
+    }
+  }
+
+  // Filter products
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = categoryFilter === "all" || product.category === categoryFilter
-    const matchesStatus = statusFilter === "all" || product.status === statusFilter
-    return matchesSearch && matchesCategory && matchesStatus
+    return matchesSearch && matchesCategory
   })
+
+  // Get unique categories
+  const categories = [...new Set(products.map((p) => p.category))]
+
+  const getStatusBadge = (stock: number) => {
+    if (stock === 0) {
+      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Out of Stock</Badge>
+    } else if (stock <= 5) {
+      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Low Stock</Badge>
+    }
+    return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">In Stock</Badge>
+  }
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </AdminLayout>
+    )
+  }
 
   return (
     <AdminLayout>
@@ -108,7 +134,7 @@ export default function ProductsPage() {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search products by name or SKU..."
+              placeholder="Search products by name..."
               className="pl-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -121,22 +147,11 @@ export default function ProductsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="Bridal Sarees">Bridal Sarees</SelectItem>
-              <SelectItem value="Kosa Silk">Kosa Silk</SelectItem>
-              <SelectItem value="Cotton Sarees">Cotton Sarees</SelectItem>
-              <SelectItem value="Banarasi Sarees">Banarasi Sarees</SelectItem>
-              <SelectItem value="Kurtis">Kurtis</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full md:w-[180px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="out_of_stock">Out of Stock</SelectItem>
-              <SelectItem value="draft">Draft</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -148,7 +163,6 @@ export default function ProductsPage() {
               <TableRow>
                 <TableHead className="w-[80px]">Image</TableHead>
                 <TableHead>Product Name</TableHead>
-                <TableHead>SKU</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Price</TableHead>
                 <TableHead>Stock</TableHead>
@@ -157,88 +171,100 @@ export default function ProductsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell>
-                    <img
-                      src={`${product.image}?height=60&width=60`}
-                      alt={product.name}
-                      className="w-12 h-12 rounded-md object-cover border border-border"
-                    />
-                  </TableCell>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{product.sku}</TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell className="font-semibold">₹{product.price.toLocaleString()}</TableCell>
-                  <TableCell>
-                    <span className={product.stock === 0 ? "text-red-600 font-semibold" : ""}>
-                      {product.stock} units
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={product.status === "active" ? "default" : "secondary"}
-                      className={
-                        product.status === "active"
-                          ? "bg-green-100 text-green-800 hover:bg-green-100"
-                          : product.status === "out_of_stock"
-                            ? "bg-red-100 text-red-800 hover:bg-red-100"
-                            : "bg-gray-100 text-gray-800 hover:bg-gray-100"
-                      }
-                    >
-                      {product.status === "active"
-                        ? "Active"
-                        : product.status === "out_of_stock"
-                          ? "Out of Stock"
-                          : "Draft"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Pencil className="h-4 w-4 mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+              {filteredProducts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                    No products found
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                filteredProducts.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      <img
+                        src={product.images?.[0] || "/placeholder-saree.jpg"}
+                        alt={product.name}
+                        className="w-12 h-12 rounded-md object-cover border border-border"
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium max-w-[300px] truncate">{product.name}</TableCell>
+                    <TableCell className="capitalize">{product.category}</TableCell>
+                    <TableCell className="font-semibold">₹{product.price?.toLocaleString()}</TableCell>
+                    <TableCell>
+                      <span className={product.stock === 0 ? "text-red-600 font-semibold" : ""}>
+                        {product.stock} units
+                      </span>
+                    </TableCell>
+                    <TableCell>{getStatusBadge(product.stock)}</TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem asChild>
+                            <Link href={`/products/${product.slug}`} target="_blank">
+                              <Eye className="h-4 w-4 mr-2" />
+                              View on Site
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href={`/admin/products/${product.id}/edit`}>
+                              <Pencil className="h-4 w-4 mr-2" />
+                              Edit
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => setDeleteId(product.id)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </div>
 
-        {/* Pagination */}
+        {/* Footer */}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Showing {filteredProducts.length} of {mockProducts.length} products
+            Showing {filteredProducts.length} of {products.length} products
           </p>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled>
-              Previous
-            </Button>
-            <Button variant="outline" size="sm">
-              Next
-            </Button>
-          </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete this product. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   )
 }

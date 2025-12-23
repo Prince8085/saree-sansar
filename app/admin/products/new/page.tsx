@@ -1,8 +1,7 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { AdminLayout } from "@/components/admin/admin-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,42 +9,95 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Upload, X } from "lucide-react"
+import { ArrowLeft, Upload, X, Loader2 } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 
-export default function NewProductPage() {
+const categories = [
+  { value: "bridal", label: "Bridal Sarees" },
+  { value: "kosa", label: "Kosa Silk" },
+  { value: "silk", label: "Silk Sarees" },
+  { value: "cotton", label: "Cotton Sarees" },
+  { value: "georgette", label: "Georgette" },
+  { value: "kurtis", label: "Kurtis" },
+  { value: "suits", label: "Salwar Suits" },
+  { value: "ghagra", label: "Ghagra/Lehenga" },
+  { value: "indo-western", label: "Indo-Western" },
+]
+
+const colors = ["red", "blue", "green", "pink", "white", "gold", "purple", "multicolor", "black", "yellow", "orange"]
+const occasions = ["wedding", "party", "casual", "festival", "office"]
+
+export default function AddProductPage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [images, setImages] = useState<string[]>([])
   const [formData, setFormData] = useState({
     name: "",
-    sku: "",
-    category: "",
-    fabric: "",
     price: "",
-    comparePrice: "",
-    stock: "",
+    originalPrice: "",
+    fabric: "",
+    category: "",
+    color: "",
+    occasion: "",
     description: "",
-    status: "active",
+    stock: "",
   })
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (files) {
-      const newImages = Array.from(files).map((file) => URL.createObjectURL(file))
-      setImages([...images, ...newImages])
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploadingImage(true)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) throw new Error("Upload failed")
+
+      const data = await response.json()
+      setImages((prev) => [...prev, data.url])
+    } catch (error) {
+      alert("Image upload failed. Please try again.")
+    } finally {
+      setUploadingImage(false)
     }
   }
 
   const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index))
+    setImages((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("[v0] Form submitted:", formData)
-    // Here you would typically save to a database
-    router.push("/admin/products")
+    setLoading(true)
+
+    try {
+      const productData = {
+        ...formData,
+        images: images.length > 0 ? images : ["/placeholder-saree.jpg"],
+      }
+
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      })
+
+      if (!response.ok) throw new Error("Failed to add product")
+
+      router.push("/admin/products")
+      router.refresh()
+    } catch (error) {
+      alert("Failed to add product. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -60,216 +112,213 @@ export default function NewProductPage() {
           </Link>
           <div>
             <h1 className="text-3xl font-serif font-bold text-foreground">Add New Product</h1>
-            <p className="text-muted-foreground">Create a new product in your inventory</p>
+            <p className="text-muted-foreground">Fill in the details to add a new product</p>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-3">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Basic Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Basic Information</CardTitle>
-                  <CardDescription>Enter the product details</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Product Name *</Label>
+        <form onSubmit={handleSubmit} className="grid gap-6 lg:grid-cols-3">
+          {/* Main Details */}
+          <div className="lg:col-span-2 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Product Information</CardTitle>
+                <CardDescription>Basic product details</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Product Name *</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="e.g., Royal Maroon Bridal Silk Saree"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="price">Selling Price (₹) *</Label>
                     <Input
-                      id="name"
-                      placeholder="e.g., Royal Maroon Bridal Silk Saree"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="sku">SKU *</Label>
-                      <Input
-                        id="sku"
-                        placeholder="e.g., BRS-001"
-                        value={formData.sku}
-                        onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Category *</Label>
-                      <Select
-                        value={formData.category}
-                        onValueChange={(value) => setFormData({ ...formData, category: value })}
-                      >
-                        <SelectTrigger id="category">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="bridal">Bridal Sarees</SelectItem>
-                          <SelectItem value="kosa">Kosa Silk</SelectItem>
-                          <SelectItem value="cotton">Cotton Sarees</SelectItem>
-                          <SelectItem value="banarasi">Banarasi Sarees</SelectItem>
-                          <SelectItem value="kurtis">Kurtis</SelectItem>
-                          <SelectItem value="suits">Salwar Suits</SelectItem>
-                          <SelectItem value="ghagra">Ghagra Chunni</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="fabric">Fabric Type</Label>
-                    <Input
-                      id="fabric"
-                      placeholder="e.g., Pure Silk with Zari Work"
-                      value={formData.fabric}
-                      onChange={(e) => setFormData({ ...formData, fabric: e.target.value })}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Describe your product in detail..."
-                      rows={5}
-                      value={formData.description}
-                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Pricing */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Pricing</CardTitle>
-                  <CardDescription>Set product pricing</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="price">Price (₹) *</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        placeholder="25999"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="comparePrice">Compare at Price (₹)</Label>
-                      <Input
-                        id="comparePrice"
-                        type="number"
-                        placeholder="29999"
-                        value={formData.comparePrice}
-                        onChange={(e) => setFormData({ ...formData, comparePrice: e.target.value })}
-                      />
-                      <p className="text-xs text-muted-foreground">Show customers the original price</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Images */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Product Images</CardTitle>
-                  <CardDescription>Upload product photos</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {images.map((image, index) => (
-                      <div key={index} className="relative group">
-                        <img
-                          src={image || "/placeholder.svg"}
-                          alt={`Product ${index + 1}`}
-                          className="w-full h-32 object-cover rounded-lg border border-border"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(index)}
-                          className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ))}
-                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
-                      <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                      <span className="text-sm text-muted-foreground">Upload Image</span>
-                      <input type="file" className="hidden" accept="image/*" multiple onChange={handleImageUpload} />
-                    </label>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Status */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Product Status</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="status">Status</Label>
-                    <Select
-                      value={formData.status}
-                      onValueChange={(value) => setFormData({ ...formData, status: value })}
-                    >
-                      <SelectTrigger id="status">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="draft">Draft</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Inventory */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Inventory</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="stock">Stock Quantity *</Label>
-                    <Input
-                      id="stock"
+                      id="price"
                       type="number"
-                      placeholder="15"
-                      value={formData.stock}
-                      onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      placeholder="25999"
                       required
                     />
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <Label htmlFor="originalPrice">Original Price (₹)</Label>
+                    <Input
+                      id="originalPrice"
+                      type="number"
+                      value={formData.originalPrice}
+                      onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                      placeholder="32999"
+                    />
+                  </div>
+                </div>
 
-              {/* Actions */}
-              <Card>
-                <CardContent className="pt-6 space-y-3">
-                  <Button type="submit" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                    Create Product
-                  </Button>
-                  <Link href="/admin/products" className="block">
-                    <Button type="button" variant="outline" className="w-full bg-transparent">
-                      Cancel
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            </div>
+                <div>
+                  <Label htmlFor="fabric">Fabric *</Label>
+                  <Input
+                    id="fabric"
+                    value={formData.fabric}
+                    onChange={(e) => setFormData({ ...formData, fabric: e.target.value })}
+                    placeholder="e.g., Pure Silk with Zari Work"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Describe the product..."
+                    rows={4}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="stock">Stock Quantity *</Label>
+                  <Input
+                    id="stock"
+                    type="number"
+                    value={formData.stock}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    placeholder="10"
+                    required
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Images */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Product Images</CardTitle>
+                <CardDescription>Upload product photos (JPG, PNG, WEBP)</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {images.map((img, index) => (
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden border">
+                      <img src={img} alt={`Product ${index + 1}`} className="object-cover w-full h-full" />
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+
+                  <label className="aspect-square rounded-lg border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 flex flex-col items-center justify-center cursor-pointer transition-colors">
+                    {uploadingImage ? (
+                      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                    ) : (
+                      <>
+                        <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                        <span className="text-sm text-muted-foreground">Upload</span>
+                      </>
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      disabled={uploadingImage}
+                    />
+                  </label>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Category & Attributes</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label>Category *</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.value} value={cat.value}>
+                          {cat.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Color *</Label>
+                  <Select
+                    value={formData.color}
+                    onValueChange={(value) => setFormData({ ...formData, color: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select color" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {colors.map((color) => (
+                        <SelectItem key={color} value={color}>
+                          {color.charAt(0).toUpperCase() + color.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Occasion *</Label>
+                  <Select
+                    value={formData.occasion}
+                    onValueChange={(value) => setFormData({ ...formData, occasion: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select occasion" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {occasions.map((occ) => (
+                        <SelectItem key={occ} value={occ}>
+                          {occ.charAt(0).toUpperCase() + occ.slice(1)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    "Add Product"
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </form>
       </div>
